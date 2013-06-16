@@ -1,0 +1,5 @@
+alias pypo="ve pypo"
+alias p="python"
+alias t="python setup.py test"
+alias da="deactivate"
+alias hz="source ~/virtualenvs/hz/bin/activate"
