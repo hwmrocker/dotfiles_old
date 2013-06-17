@@ -126,28 +126,4 @@ unset _prompt_hostname _prompt_username
 .  /usr/share/autojump/autojump.sh
 
 
-build_pm() {
-    ssh root@builder-pmsysm-32-1 "builder/build $@" 
-    if [ "$last" = "terminator-front" ] || [ "$last" = "terminator-bridge" ] ; then
-        echo "also call build_pm_64!" 
-    fi
-}
 
-build_pm_64() {
-    ssh root@perconamaster-pmtest-64-1 "builder/build $@" 
-    ssh root@perconamaster-pmtest-64-1 rsync -qavz builder/debs builder-pmsysm-32-1:builder
-}
-
-push_pm() {
-    ssh root@builder-pmsysm-32-1 "builder/push $@" 
-}
-
-update_pm() {
-    parallel -i ssh $USER@{} "sudo -S /opt/tools/puppetRun.sh" -- $@
-}
-
-pmversion () {
-        ssh $1 "for PACKAGE in \`aptitude search '~S ~i ~Apokermania' | sed -re 's/^.{4}([^ ]*) .*$/\1/'\` ; do echo \$PACKAGE-\`dpkg -s \$PACKAGE | sed -rne 's/^Version: (.*)$/\1/p'\` ; done"
-}
-
-complete -F _known_hosts pmversion
